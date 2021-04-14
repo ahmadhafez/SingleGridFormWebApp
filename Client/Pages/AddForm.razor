@@ -1,0 +1,47 @@
+﻿@page "/addform"
+@using System.Net.Http
+@using SingleGridFormWebApp.Shared
+@inject HttpClient Http
+<h3>Add Form</h3>
+<div>
+    <label for="form-name">Name</label>
+    <input id="form-name" @bind="name" />
+</div>
+<div>
+    <div><h4>Columns</h4></div>
+
+    <div>
+        @for (int i = 1; i <= 10; i++)
+        {
+            string colName = $"colName{@i}";
+            @* <button @onclick="@AddItem">Add</button>*@
+            <div id="div-column-@i">
+                <label for="form-column-@i">Column @i</label>
+
+                <input id="form-column-@i" @bind="colName" />
+            </div>
+        }
+    </div>
+</div>
+<div class="btn"><a href="form" class="btn btn-primary">Back</a></div>
+<div>
+
+    <button @onclick="@AddItem">Save</button>
+</div>
+@code {
+    public string name;
+    public List<Column> columns = new List<Column>();
+    public string colName1, colName2, colName3, colName4, colName5, colName6, colName7, colName8, colName9, colName10;
+    public int columnCount = 0;
+    private async Task AddItem()
+    {
+        var form = new SingleGridFormWebApp.Shared.Form() { Name = name };
+
+        for (int j = 1; j <= columnCount; j++)
+        {
+            var col = new Column() { };
+        }
+        await Http.PostAsJsonAsync($"api/Forms", form);
+    }
+
+}

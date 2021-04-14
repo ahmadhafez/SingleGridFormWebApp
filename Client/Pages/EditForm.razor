@@ -1,0 +1,39 @@
+﻿@page "/editform/{Id:int}"
+@using System.Net.Http
+@inject HttpClient Http
+<h3>Edit Form</h3>
+@if (form != null)
+{
+    <label>
+        Name:
+        <input @bind-value="form.Name" />
+    </label>
+    @if (form.Columns != null)
+    {
+        @foreach (var col in form.Columns)
+        {
+            <label>
+                Column Name:
+                <input @bind-value="col.Name" />
+            </label>
+        }
+    }
+}
+@*<nput @bind="id" />*@
+<div><button class="btn" @onclick="@DeleteItem">Delete</button></div>
+
+
+<div class="btn"><a href="form" class="btn btn-primary">Back</a></div>
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    SingleGridFormWebApp.Shared.Form form;
+
+    private async Task DeleteItem() =>
+await Http.DeleteAsync($"api/Forms/{Id}");
+
+    protected override async Task OnInitializedAsync()
+    {
+        form = await Http.GetFromJsonAsync<SingleGridFormWebApp.Shared.Form>($"api/Forms/{Id}");
+    }
+}
